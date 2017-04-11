@@ -49,6 +49,7 @@ function getIngredient() {
     );
 }
 
+
 /**************
     Deleters
 **************/
@@ -121,4 +122,12 @@ $(document).ready(function () {
     getPizza();
     getIngredient();
 
+});
+
+$(".manageIngredients").on("click", "div.ingredient button.addIngredient", function () {
+    $(".manageIngredients").append("<div class=\"ingredient\"><label>Ingrédient </label><select><option disabled selected>Ingrédient</option></select><button type=\"button\" class=\"delIngredient\">-</button><button type=\"button\" class=\"addIngredient\">+</button></div>");
+});
+
+$(".manageIngredients").on("click", "div.ingredient button.delIngredient", function () {
+    $(this).parent().remove();
 });
