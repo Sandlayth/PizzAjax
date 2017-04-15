@@ -26,7 +26,7 @@ if(isset($_POST['action'])) {
 
 
 function addPizza() {
-    if(!empty($_POST['name']) && !empty($_POST['price'])) {
+    if(!empty($_POST['name']) && !empty($_POST['price']) && !empty($_POST['idIngredients'])) {
         try {
             global $db_con;
             $name = $_POST['name'];
@@ -35,6 +35,14 @@ function addPizza() {
 
             $stmt = $db_con->prepare('insert into pizza(name, description, price) values(:name, :description, :price)');
             $stmt->execute(array('name' => $name, 'description' => $description, 'price' => $price));
+            
+            $idPizza = $db_con->lastInsertId();
+
+            foreach($_POST["idIngredients"] as $idIngredient) { 
+                $stmt = $db_con->prepare('insert into pizzaIngredient(idPizza, idIngredient) values(:idPizza, :idIngredient)');
+                $stmt->execute(array('idPizza' => $idPizza, 'idIngredient' => $idIngredient));
+            }
+
         } catch (PDOException $e) {
             echo $e;
         }
