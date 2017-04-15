@@ -3,24 +3,19 @@
 
 define([
     'pizza',
-    'jquery'
-], function (pizza, $) {
+    'jquery',
+    'ingredient',
+    'view'
+], function (Pizza, $, Ingredient, View) {
     "use strict";
     var self = {
         getPizza: function () {
-            return pizza.loadList().then(function (data) {
+            return Pizza.loadList().then(function (data) {
                 data = $.parseJSON(data);
 
-                $("#pizzaList").html("<h1>Liste des pizzas</h1> <hr> Il n'y a aucune pizza !");
+                View.emptyPizzaList();
                 if (data.length !== 0) {
-                    $("#pizzaList").html("");
-                    $.each(data.idPizza, function (key, value) {
-                        if (!value.description.trim()) {
-                            value.description = "Aucune description";
-                        }
-
-                        $("#pizzaList").append("<hr> <div><strong>" + value.name + "</strong> <span>: " + value.description + " |" + value.price + " € </span><button id=\"pizzaid" + value.idPizza + "\" type=\"button\">Supprimer</button></div>");
-                    });
+                    View.fillPizzaList(data);
                 }
             });
         },
@@ -28,9 +23,10 @@ define([
             return $.post(
                 'app/managePizza.php', {
                     action: "addPizza",
-                    name: $("#addPizza input[name=name]").val(),
-                    description: $("#addPizza textarea[name=description]").val(),
-                    price: $("#addPizza input[name=price]").val()
+                    name: View.getPizzaName(),
+                    description: View.getPizzaDescription(),
+                    price: View.getPizzaPrice(),
+                    idIngredients: View.getPizzaIngredient()
                 },
                 function (data) {},
                 'text'
@@ -47,10 +43,21 @@ define([
             ).then(self.getPizza());
         },
         addIngredient: function () {
-            $(".manageIngredients").append("<div class=\"ingredient\"><label>Ingrédient </label><select><option disabled selected>Ingrédient</option></select><button type=\"button\" class=\"delIngredient\">-</button><button type=\"button\" class=\"addIngredient\">+</button></div>");
+            var obj = View.addPizzaIngredient();
+            self.getIngredient(obj);
         },
         delIngredient: function (obj) {
-            obj.parent().remove();
+            View.delPizzaIngredient(obj);
+        },
+        getIngredient: function (obj) {
+            Ingredient.loadList().then(function (data) {
+                data = $.parseJSON(data);
+
+                if (data.length !== 0) {
+                    View.fillIngredientPizzaList(data, obj);
+                }
+
+            });
         }
     };
     return self;

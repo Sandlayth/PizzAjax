@@ -3,22 +3,19 @@
 
 define([
     'ingredient',
-    'jquery'
-], function (Ingredient, $) {
+    'jquery',
+    'view'
+], function (Ingredient, $, View) {
     "use strict";
     var self = {
         getIngredient: function () {
             Ingredient.loadList().then(function (data) {
                 data = $.parseJSON(data);
 
-                $("#ingredientList").html("<h1>Liste des ingrédients</h1> <hr> Il n'y a aucun ingrédient !");
+                View.emptyIngredientList();
                 if (data.length !== 0) {
-                    $("#ingredientList").html("");
-                    $.each(data.idIngredient, function (key, value) {
-                        $("#ingredientList").append("<hr> <div><strong>" + value.name + "</strong><button id=\"ingredientid" + value.idIngredient + "\" type=\"button\">Supprimer</button></div>");
-                    });
+                    View.fillIngredientList(data);
                 }
-
             });
         },
         delIngredient: function (id) {
@@ -36,7 +33,7 @@ define([
             $.post(
                 'app/manageIngredient.php', {
                     action: "addIngredient",
-                    name: $("#addIngredient input[name=name]").val()
+                    name: View.getIngredientId()
                 },
                 function (data) {},
                 'text'

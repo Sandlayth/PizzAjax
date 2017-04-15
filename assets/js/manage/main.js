@@ -13,6 +13,7 @@ require([
 ], function (PizzaFiller, $, IngredientFiller) {
     "use strict";
     PizzaFiller.getPizza();
+    PizzaFiller.getIngredient($(".ingredient select"));
     IngredientFiller.getIngredient();
 
     $("#pizzaList").on("click", "button", function () {
