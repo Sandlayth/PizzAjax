@@ -72,7 +72,7 @@ function delPizza() {
 function getPizza() {
     try { 
         global $db_con;
-        $stmt = $db_con->prepare("select * from pizza");
+        $stmt = $db_con->prepare("select * from pizza left join pizzaIngredient on pizza.idPizza = pizzaIngredient.idPizza left join ingredient on ingredient.idIngredient = pizzaIngredient.idIngredient");
         $stmt->execute();
         // $stmt->execute(array(":idEcole"=>$idEcole));
         $data = array();
