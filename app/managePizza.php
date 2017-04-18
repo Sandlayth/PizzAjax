@@ -35,7 +35,7 @@ function addPizza() {
 
             $stmt = $db_con->prepare('insert into pizza(name, description, price) values(:name, :description, :price)');
             $stmt->execute(array('name' => $name, 'description' => $description, 'price' => $price));
-            
+
             $idPizza = $db_con->lastInsertId();
 
             foreach($_POST["idIngredients"] as $idIngredient) { 
@@ -72,13 +72,14 @@ function delPizza() {
 function getPizza() {
     try { 
         global $db_con;
-        $stmt = $db_con->prepare("select * from pizza left join pizzaIngredient on pizza.idPizza = pizzaIngredient.idPizza left join ingredient on ingredient.idIngredient = pizzaIngredient.idIngredient");
+        $stmt = $db_con->prepare("select pizza.idPizza, pizza.name, pizza.description, pizza.price, ingredient.name as ingredient from pizza left join pizzaIngredient on pizza.idPizza = pizzaIngredient.idPizza left join ingredient on ingredient.idIngredient = pizzaIngredient.idIngredient");
         $stmt->execute();
         // $stmt->execute(array(":idEcole"=>$idEcole));
         $data = array();
         while($row=$stmt->fetch(PDO::FETCH_ASSOC)) {
-            $data['idPizza'][] = $row;
-        }       
+            $data['pizza'][] = $row;
+        }    
+        
         header('Content-Type: application/json');
         echo json_encode($data);  
     } catch (PDOException $e) {

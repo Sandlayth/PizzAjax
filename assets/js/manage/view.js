@@ -29,7 +29,7 @@ define([
         },
         fillPizzaList: function (data) {
             $("#pizzaList").html("");
-            $.each(data.idPizza, function (key, value) {
+            $.each(data.pizza, function (key, value) {
                 if (!value.description.trim()) {
                     value.description = "Aucune description";
                 }
