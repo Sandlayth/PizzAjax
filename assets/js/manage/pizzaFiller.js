@@ -12,7 +12,21 @@ define([
         getPizza: function () {
             return Pizza.loadList().then(function (data) {
                 data = $.parseJSON(data);
-
+                data = data.pizza.reduce((m, {
+                    idPizza,
+                    name,
+                    description,
+                    price,
+                    ingredient
+                }) => m.set(idPizza, {
+                    idPizza,
+                    name,
+                    description,
+                    price,
+                    ingredients: (m.get(idPizza) || {
+                        ingredients: new Set()
+                    }).ingredients.add(ingredient)
+                }), new Map());
                 View.emptyPizzaList();
                 if (data.length !== 0) {
                     View.fillPizzaList(data);

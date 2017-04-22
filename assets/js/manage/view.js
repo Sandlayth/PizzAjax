@@ -29,12 +29,13 @@ define([
         },
         fillPizzaList: function (data) {
             $("#pizzaList").html("");
-            $.each(data.pizza, function (key, value) {
-                if (!value.description.trim()) {
-                    value.description = "Aucune description";
+            data.forEach(function (pizza) {
+                if (!pizza.description.trim()) {
+                    pizza.description = "Aucune description";
                 }
 
-                $("#pizzaList").append("<hr> <div><strong>" + value.name + "</strong> <span>: " + value.description + " |" + value.price + " € </span><button id=\"pizzaid" + value.idPizza + "\" type=\"button\">Supprimer</button></div>");
+                $("#pizzaList").append("<hr> <div><strong>" + pizza.name + "</strong> <span>: " + pizza.description + ": " + Array.from(pizza.ingredients) +
+                    " | " + pizza.price + " € </span><button id=\"pizzaid" + pizza.idPizza + "\" type=\"button\">Supprimer</button></div>");
             });
         },
         getPizzaName: function () {
