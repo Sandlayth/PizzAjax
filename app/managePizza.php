@@ -57,7 +57,8 @@ function delPizza() {
         try {
             global $db_con;
             $id = $_POST['id'];
-
+            $stmt = $db_con->prepare('delete from pizzaIngredient where idPizza = :id');
+            $stmt->execute(array('id' => $id));
             $stmt = $db_con->prepare('delete from pizza where idPizza = :id');
             $stmt->execute(array('id' => $id));
         } catch (PDOException $e) {
